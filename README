@@ -1,0 +1,189 @@
+# Arknights Operator Manager
+
+> 🇧🇷 [Versão em Português abaixo](#gerenciador-de-operadores-arknights)
+
+---
+
+## Overview
+
+A command-line Java application for managing an Arknights operator roster, built as an academic project to apply and test classic data structures and software engineering principles in a practical, domain-driven context.
+
+## Goals
+
+- Implement and apply classic data structures — **B-Tree**, **Patricia Trie**, and **KMP string search** — in a real use case rather than in isolation
+- Model the Arknights operator system faithfully, including skills, masteries, modules, elite promotions, and deployment costs
+- Follow **SOLID** principles throughout the design of the controller and utility layers
+- Provide **persistent storage** via a tagged `.dat` format for full-fidelity save/load, and a human-readable `.md` roster export
+- Build a foundation extensible toward a graphical user interface
+
+## Features
+
+### Data Structures
+| Structure | Usage |
+| :--- | :--- |
+| `BTree<K, V>` | Primary operator registry — O(log n) insert, search, delete |
+| `PatriciaTrie` | Name index — prefix-based lookup, autocomplete-ready |
+| `KMP` | Substring search across skill names and descriptions |
+
+### Operator Model
+Each operator tracks:
+- Name, rarity (1–6★), class and subclass
+- Elite/promotion level (E0–E2) and level
+- Deployment cost (DP) and potential (1–6)
+- Up to 3 skills with individual levels (1–7, M1–M3) and a designated default
+- Multiple modules with levels (1–3) and an equipped default
+
+### Sorting
+- **MergeSort** (generic, O(n log n)) with pluggable comparators
+- Sort criteria: name, rarity, level, elite, DP cost, or compound (rarity + name, elite + level)
+
+### Persistence
+- **`.dat` export/import** — full-fidelity tagged format, human-readable and efficient to parse
+- **`.md` roster export** — markdown table showing each operator's equipped skill and module
+- Conflict resolution on import: skip or overwrite per operator
+
+### Architecture
+```
+src/main/
+├── main/           # Entry point and terminal interface (Main.java)
+├── models/         # Operator, Skill, Module
+├── structures/     # BTree, PatriciaTrie, KMP
+├── controllers/    # OperatorDatabase, OperatorSerializer, RosterExporter
+│                   # Interfaces: OperatorExporter, OperatorImporter
+└── sorting/        # MergeSort, OperatorComparators
+                    # Interface: Sorter
+```
+
+## Current Stage
+
+| Layer | Status |
+| :--- | :--- |
+| Data structures | ✅ Implemented and tested (BTree: 36/36, Patricia Trie: tested) |
+| Models | ✅ Complete |
+| Controller layer | ✅ Complete, SOLID-compliant |
+| Sorting | ✅ Complete |
+| Persistence (.dat / .md) | ✅ Complete |
+| Terminal interface | ✅ Complete (debug/testing phase) |
+| Model/controller tests | 🔲 Pending |
+| GUI | 🔲 Planned |
+
+## Building and Running
+
+From the `src/` directory:
+
+```bash
+chmod +x build.sh   # first time only
+./build.sh
+```
+
+The script cleans any previous compilation, compiles all source files into `bin/`, and launches the program. If compilation fails, it stops and reports the error without attempting to run.
+
+**Requirements:** Java 17 or higher.
+
+## Project Structure
+
+```
+project/
+├── src/
+│   ├── build.sh
+│   ├── main/           # Source files
+│   └── test/           # Test files (mirrors main/)
+└── bin/                # Compiled .class files (generated)
+```
+
+---
+
+---
+
+# Gerenciador de Operadores Arknights
+
+> 🇬🇧 [English version above](#arknights-operator-manager)
+
+---
+
+## Visão Geral
+
+Uma aplicação Java de linha de comando para gerenciar o rol de operadores do jogo Arknights, desenvolvida como projeto acadêmico com o objetivo de aplicar e testar estruturas de dados clássicas e princípios de engenharia de software em um contexto prático orientado a domínio.
+
+## Objetivos
+
+- Implementar e aplicar estruturas de dados clássicas — **B-Árvore**, **Árvore Patricia** e **busca KMP** — em um caso de uso real, e não de forma isolada
+- Modelar fielmente o sistema de operadores do Arknights, incluindo habilidades, maestrias, módulos, promoções de elite e custo de deployment
+- Seguir os princípios **SOLID** no design das camadas de controle e utilitários
+- Fornecer **persistência de dados** via formato `.dat` para salvamento e carregamento completo, e exportação de rol legível em `.md`
+- Construir uma base extensível para uma interface gráfica futura
+
+## Funcionalidades
+
+### Estruturas de Dados
+| Estrutura | Uso |
+| :--- | :--- |
+| `BTree<K, V>` | Registro principal de operadores — inserção, busca e remoção em O(log n) |
+| `PatriciaTrie` | Índice de nomes — busca por prefixo, pronta para autocomplete |
+| `KMP` | Busca por substring em nomes e descrições de habilidades |
+
+### Modelo de Operador
+Cada operador armazena:
+- Nome, raridade (1–6★), classe e subclasse
+- Nível de elite/promoção (E0–E2) e nível atual
+- Custo de deployment (DP) e potencial (1–6)
+- Até 3 habilidades com níveis individuais (1–7, M1–M3) e uma habilidade padrão definida
+- Múltiplos módulos com nível (1–3) e um módulo equipado definido
+
+### Ordenação
+- **MergeSort** (genérico, O(n log n)) com comparadores intercambiáveis
+- Critérios de ordenação: nome, raridade, nível, elite, custo de DP, ou compostos (raridade + nome, elite + nível)
+
+### Persistência
+- **Exportação/importação `.dat`** — formato etiquetado com fidelidade total, legível por humanos e de análise sintática eficiente
+- **Exportação de roster `.md`** — tabela markdown exibindo a habilidade e o módulo equipados de cada operador
+- Resolução de conflitos na importação: pular ou sobrescrever por operador
+
+### Arquitetura
+```
+src/main/
+├── main/           # Ponto de entrada e interface de terminal (Main.java)
+├── models/         # Operator, Skill, Module
+├── structures/     # BTree, PatriciaTrie, KMP
+├── controllers/    # OperatorDatabase, OperatorSerializer, RosterExporter
+│                   # Interfaces: OperatorExporter, OperatorImporter
+└── sorting/        # MergeSort, OperatorComparators
+                    # Interface: Sorter
+```
+
+## Estado Atual
+
+| Camada | Status |
+| :--- | :--- |
+| Estruturas de dados | ✅ Implementadas e testadas (BTree: 36/36, Patricia Trie: testada) |
+| Models | ✅ Completos |
+| Camada de controle | ✅ Completa, em conformidade com SOLID |
+| Ordenação | ✅ Completa |
+| Persistência (.dat / .md) | ✅ Completa |
+| Interface de terminal | ✅ Completa (fase de debug/testes) |
+| Testes de models/controllers | 🔲 Pendente |
+| Interface gráfica (GUI) | 🔲 Planejada |
+
+## Compilação e Execução
+
+A partir do diretório `src/`:
+
+```bash
+chmod +x build.sh   # apenas na primeira vez
+./build.sh
+```
+
+O script limpa qualquer compilação anterior, compila todos os arquivos-fonte em `bin/` e inicia o programa. Se a compilação falhar, o script para e reporta o erro sem tentar executar.
+
+**Requisitos:** Java 17 ou superior.
+
+## Estrutura do Projeto
+
+```
+project/
+├── src/
+│   ├── build.sh
+│   ├── main/           # Arquivos-fonte
+│   └── test/           # Arquivos de teste (espelha main/)
+└── bin/                # Arquivos .class compilados (gerado automaticamente)
+```
